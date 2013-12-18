@@ -33,7 +33,7 @@ RUN dpkg-reconfigure locales
 # PostgreSQL
 
 	# Install
-	RUN apt-get install -y postgresql
+	RUN apt-get install -y postgresql postgresql-contrib
 
 	# Config files
 	ADD postgresql/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
@@ -57,6 +57,12 @@ RUN dpkg-reconfigure locales
 	    -c config_file=$POSTGRES_CONFIG"
 
 	RUN echo "CREATE DATABASE sequelize_test WITH OWNER sequelize_test;" | \
+	    su postgres sh -c "$POSTGRES_BIN/postgres --single \
+	    -D $POSTGRES_DATA \
+	    -c config_file=$POSTGRES_CONFIG"
+
+	# HSTORE
+	RUN echo "CREATE EXTENSION hstore;" | \
 	    su postgres sh -c "$POSTGRES_BIN/postgres --single \
 	    -D $POSTGRES_DATA \
 	    -c config_file=$POSTGRES_CONFIG"
