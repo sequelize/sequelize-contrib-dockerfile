@@ -51,7 +51,7 @@ RUN dpkg-reconfigure locales
 	RUN su postgres sh -c "$POSTGRES_BIN/initdb $POSTGRES_DATA"
 
 	# Create database & user
-	RUN echo "CREATE USER sequelize_test WITH PASSWORD '';" | \
+	RUN echo "CREATE USER sequelize_test WITH SUPERUSER PASSWORD '';" | \
 	    su postgres sh -c "$POSTGRES_BIN/postgres --single \
 	    -D $POSTGRES_DATA \
 	    -c config_file=$POSTGRES_CONFIG"
